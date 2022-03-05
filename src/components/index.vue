@@ -1,7 +1,30 @@
 <template>
   <div>
-    <iframe allow="autoplay" style="visibility: hidden;position:absolute" v-if="currentMusic == 'fushengweixie'" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="https://music.163.com/outchain/player?type=2&id=1425438646&auto=1&height=66"></iframe>
-    <iframe allow="autoplay" style="visibility: hidden;position:absolute" v-if="currentMusic == 'dayu'"  frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="https://music.163.com/outchain/player?type=2&id=1423970563&auto=1&height=66"></iframe>
+    <img class="taobg" src="@/taotaobg.png" alt="" />
+    <iframe
+      allow="autoplay"
+      style="visibility: hidden; position: absolute"
+      v-if="currentMusic == 'fushengweixie'"
+      frameborder="no"
+      border="0"
+      marginwidth="0"
+      marginheight="0"
+      width="330"
+      height="86"
+      src="https://music.163.com/outchain/player?type=2&id=1425438646&auto=1&height=66"
+    ></iframe>
+    <iframe
+      allow="autoplay"
+      style="visibility: hidden; position: absolute"
+      v-if="currentMusic == 'dayu'"
+      frameborder="no"
+      border="0"
+      marginwidth="0"
+      marginheight="0"
+      width="330"
+      height="86"
+      src="https://music.163.com/outchain/player?type=2&id=1423970563&auto=1&height=66"
+    ></iframe>
     <div class="jazz-timeline-wrapper" id="skrollr-body">
       <div class="jazz-timeline dark-timeline ultimate-style">
         <div
@@ -47,7 +70,10 @@
     <div style="width: 100%; text-align: center">
       <img class="arrow" src="@/arrow.png" alt="" />
       <img
-        @click="showLove = true;currentMusic = 'dayu'"
+        @click="
+          showLove = true;
+          currentMusic = 'dayu';
+        "
         class="bottom_tao"
         style="width: 200px"
         src="@/taotao.png"
@@ -87,7 +113,7 @@
     </div>
     <div @click="hideImage()" v-if="currentImage" class="blackCover">
       <div class="imgbox">
-        <img class="curImage" :src="require(`@/${currentImage}.png`)" alt="" />
+        <img class="curImage" :src="require(`@/${currentImage}.jpg`)" alt="" />
         <img class="close" src="@/close.png" alt="" />
       </div>
     </div>
@@ -99,9 +125,38 @@
         alt=""
       />
     </div>
+    <div @mouseenter="showThanks = true" @mouseleave="showThanks = false" class="thanks">
+      <blockquote v-if="showThanks" class="bubble">
+        主催：琛琛<br>
+        绘画授权：超能诺诺、爵迹灬神迹<br>
+        测试：凉城暮暖、月上弦下月上弦、SirO、城东、咸鱼别府
+      </blockquote>
+      鸣谢名单
+    </div>
   </div>
 </template>
 <script>
+function preloadImg(url, cb) {
+  var img = new Image();
+  img.src = url;
+  if (img.complete) {
+    //接下来可以使用图片了
+    //do something here
+    cb();
+  } else {
+    img.onload = function () {
+      //接下来可以使用图片了
+      //do something here
+      cb();
+    };
+    img.onerror = function () {
+      //接下来可以使用图片了
+      //do something here
+      cb();
+    };
+  }
+}
+
 export default {
   name: "index",
   data() {
@@ -109,7 +164,8 @@ export default {
       currentMusic: "",
       currentImage: "",
       showLove: false,
-      start:false,
+      start: false,
+      showThanks: false,
       metaData: [
         {
           id: 1,
@@ -163,7 +219,7 @@ export default {
         {
           id: 7,
           color: "grey",
-          date: "Fri 19",
+          date: "May 19",
           title: "独立主持",
           content:
             "发布第一期A.I.Play视频，小桃第一次独立主持节目，在节目中玩CSGO游戏的军备竞赛模式，据称只玩了五分钟但已经拿到了一局黄金匕首（该模式每局的最高等级）和一局冠军",
@@ -172,7 +228,7 @@ export default {
         {
           id: 8,
           color: "turqoise",
-          date: "Jue 26",
+          date: "Jun 26",
           title: "一起玩游戏",
           content:
             "《底特律：变人》游戏实况系列第一期发布，小桃与小希首次一起玩游戏（想到后面的纸人……）",
@@ -217,7 +273,7 @@ export default {
         {
           id: 13,
           color: "black",
-          date: "Fri 15",
+          date: "May 15",
           title: "纸人",
           content: "开始直播游戏《纸人》，（小桃你很勇哦……）",
           picUrl: "13纸人",
@@ -373,10 +429,14 @@ export default {
       this.start = true;
       setTimeout(() => {
         this.currentMusic = "fushengweixie";
-      },1000)
-    }
+      }, 1000);
+    },
   },
   mounted() {
+    preloadImg("../assets/image/close.png");
+    this.metaData.forEach((item) => {
+      preloadImg(require(`../assets/image/${item.picUrl}.jpg`), () => {});
+    });
     setInterval(() => {
       if (document.title == "🍀桃老师生日快乐🍀") {
         document.title = "🎂桃老师生日快乐🎂";
@@ -404,15 +464,17 @@ export default {
 }
 
 .jazz-timeline .timeline-post .timeline-content p {
-  color: black;
-  font-size: 20px;
+  color: white;
+  line-height: 1.3;
+  font-size: 26px;
   z-index: 2;
   position: absolute;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 10px 20px;
+  text-shadow: #000 2px 0 0, #000 0 2px 0, #000 -2px 0 0, #000 0 -2px 0;
 }
 
 .timeline-content .content-details {
@@ -426,7 +488,8 @@ export default {
 
 .content-background {
   width: 100%;
-  opacity: 0.2;
+  opacity: 0.8;
+  filter: blur(1px);
 }
 
 .fullScreen {
@@ -504,15 +567,26 @@ export default {
   .top {
     display: none !important;
   }
+  .welcome .text {
+    font-size: 30px !important;
+  }
+  .taobg {
+    height: 50% !important;
+  }
+
+  .jazz-timeline .timeline-post .timeline-content p {
+    font-size: 16px !important;
+    text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0 !important;
+  }
 }
 .paper {
   white-space: pre-wrap;
-  width: 40%;
+  width: 900px;
   background-image: url("../assets/image/paper.png");
   overflow: auto;
   padding: 60px;
   margin: 0;
-  font-size: 19px;
+  font-size: 20px;
   background-size: 100% 100%;
 }
 .arrow {
@@ -531,6 +605,52 @@ export default {
 }
 .welcome .text {
   text-align: center;
-  font-size: 20px;
+  font-size: 50px;
+}
+.taobg {
+  position: fixed;
+  height: 80%;
+  bottom: 0;
+  opacity: 0.65;
+}
+.thanks {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  color: white;
+  z-index: 10000;
+}
+.thanks:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.bubble {
+  position:absolute;
+  top: -200px;
+  right: 0;
+  padding: 15px;
+  margin: 1em 0em 3em;
+  width: 300px;
+  line-height: 2;
+  color: #fff;
+  text-align: right;
+  background: #1C1F23;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  border: #fff solid 1px;
+}
+.bubble:after {
+  content:"\00a0";
+  width:0;
+  height:0;
+  display:block;
+  border-style:solid;
+  border-width:15px;
+  border-color:white transparent transparent transparent;
+  position:absolute;
+  z-index:-1;
+  bottom:-30px;
+  right:10px;
 }
 </style>
